@@ -1,5 +1,5 @@
-
 name: First Workflow
+
 
 on: [push]
 jobs:
@@ -7,6 +7,18 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MY_NAME: "Mona The Octocat"
+      MY_VERSION: "1.0.0"
+      MY_ENV_VAR: ${{ github.ref == 'refs/heads/main' && 'value_for_main_branch' || 'value_for_other_branches' }}
     steps:
+      - uses: actions/checkout@v4
       - name: bash-version
         run: echo "::add-mask::$MY_NAME"
+      - name: bash-example
+        run: |
+          echo "Hello $MY_NAME $MY_VERSION"
+          echo "This is a bash script"
+          echo "You can access the secret: $MY_NAME"
+          echo "You can access the env var: $MY_ENV_VAR"
+
+  call-env-workflow:
+    uses: './.github/workflows/env.yaml'
